@@ -47,10 +47,14 @@ ListTodo.prototype = {
             return true;
         }
     },
-    
-    set: function (value) {
-        //key is timestamp
-        var key = parseInt(Blockchain.block.timestamp);
+    //this is encrypt string
+    getPassword: function(){
+        var from = Blockchain.transaction.from;
+        return this.listPassword.get(from);
+    },
+    //ussally key is timestamp
+    set: function (key,value) {
+        
         var from = Blockchain.transaction.from;
         var todo = this.addessTodo.get(from);
         var found = false;

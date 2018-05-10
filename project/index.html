@@ -2,14 +2,69 @@
 <html>
 <head>
 	<title></title>
-	<script type="text/javascript" src="js/sjcl.js" />
-	<!-- https://github.com/louismullie/aes-js -->
-	<!-- https://bitwiseshiftleft.github.io/sjcl/ -->
-	<script type="text/javascript">
-		
-	</script>
+	
+	<link rel='stylesheet prefetch' href='style.css'>
+	<script type="text/javascript" src="js/sjcl.js" ></script>
 </head>
 <body>
+<script type="text/x-template" id="main">
+  <v-app>
+      <main>
+      <router-view></router-view>
+    </main>  
+  </v-app>
+</script>  
+<script type="text/x-template" id="todo">
+    <div>
+      Todo here
+    </div>
+</script>
+
+<script type="text/x-template" id="login">
+     
+  <div classs="login">
+      <router-link 
+          to="/notification"
+          tag="span"
+          style="cursor: pointer"
+          >
+          ok
+        </router-link>
+    <h1 v-if="checking">Please wait</h1>
+    <div v-if="!checking">
+      <div v-if="!encrypt_password">
+          <p>For first time, You need register by enter strong password to protect your list</p>
+          <input v-model="password" placeholder="Input strong password">
+          <button v-on:click="register">Register</button>
+      </div>
+      <div v-if="encrypt_password">
+          <p>Your acccount is found on system,Enter your password:</p>
+          <input v-model="v_password" placeholder="Input password">
+          <button v-on:click="login">Login</button>
+      </div>
+    </div>
+
+  </div>
+</script>
+
+<script type="text/x-template" id="notification">
+  <p>notification</p>
+</script>
+  
+<div id="app">
+</div>  
+
+
+<script type="text/javascript" src="http://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js" ></script>
+<script type="text/javascript" src="https://unpkg.com/vuex@3.0.1/dist/vuex.js" ></script>
+<script type="text/javascript" src="https://unpkg.com/vue-router@3.0.1/dist/vue-router.js" ></script>
+<script src='//unpkg.com/vuetify/dist/vuetify.min.js'></script>
+<script type="text/javascript" src="js/nebPay.js" ></script>
+<script type="text/javascript">
+  var NebPay = require("nebpay");
+  var nebPay = new NebPay();
+</script>
+<script type="text/javascript" src="js/screens/main.js" ></script>
 
 </body>
 </html>
