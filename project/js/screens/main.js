@@ -86,15 +86,15 @@ const Login = {
 
     login:function(){
       
-      console.log("login", this.v_password);
+      
       console.log(this.encrypt_password);
       try{
         var de_result = sjcl.decrypt(this.v_password, this.encrypt_password);
-        console.log("de_result",de_result);
+      
         if (de_result !== this.sample_param ){
           alert("Invalid password");
         }else{
-          console.log("login ok");
+          
           localStorage.setItem(this.store_key, btoa(this.v_password));
 
           console.log(this.$router);
@@ -105,7 +105,6 @@ const Login = {
         alert("Invalid password");
       }
       
-      console.log("de_result",de_result);
 
     },
     registerListener:function(resp){
@@ -115,7 +114,7 @@ const Login = {
     onrefreshClick: function() {
       var _this = this;
       setTimeout(function(){
-        console.log("this.serialNumber",_this.serialNumber);
+      
           nebPay.queryPayInfo(_this.serialNumber)   //search transaction result from server (result upload to server by app)
           .then(function (resp) {
             if (!resp) return;
