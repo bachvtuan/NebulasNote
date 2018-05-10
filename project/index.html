@@ -10,7 +10,7 @@
 <script type="text/x-template" id="main">
   <v-app>
       <main>
-      <router-view></router-view>
+        <router-view></router-view>  
     </main>  
   </v-app>
 </script>  
@@ -23,13 +23,7 @@
 <script type="text/x-template" id="login">
      
   <div classs="login">
-      <router-link 
-          to="/notification"
-          tag="span"
-          style="cursor: pointer"
-          >
-          ok
-        </router-link>
+
     <h1 v-if="checking">Please wait</h1>
     <div v-if="!checking">
       <div v-if="!encrypt_password">

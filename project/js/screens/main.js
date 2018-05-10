@@ -139,6 +139,12 @@ const Notification = {
 }
 
 
+const Main = {
+  template: "#main",
+  mounted() {
+    this.$router.push({name:"Login"});
+  }
+}
 
 var routes = [{
   path: "/todo",
@@ -155,6 +161,8 @@ var routes = [{
     component: Notification
   }];
 
+
+
 var router = new VueRouter({
   routes: routes
 });
@@ -164,7 +172,7 @@ new Vue({
   store: store,
   router: router,
   render: function render(h) {
-    return h(Login);
+    return h(Main);
   }
 });
 
