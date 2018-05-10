@@ -22,6 +22,7 @@ const Login = {
   template: "#login",
   data:function () {
     return {
+      store_key: 'password',
       sample_param: "Hello World!",
       checking:true,
       password:'',
@@ -45,11 +46,25 @@ const Login = {
 
     listener: function(resp) {
         this.checking = false;
-        console.log("resp.result");
-        console.log(resp);
+        
         this.encrypt_password = resp.result !== "null" ?  JSON.parse(resp.result)   : null;
-        console.log("resp.result");
-        console.log(this.encrypt_password);
+        var local_password = localStorage.getItem(this.store_key);
+
+        //password is stored, verify it
+        if (local_password && this.encrypt_password){
+          
+          try{
+            var de_result = sjcl.decrypt( atob(local_password), this.encrypt_password);
+            
+            if (de_result == this.sample_param ){
+
+              this.$router.push("/todo");
+            }
+          }catch(error){
+            console.log(error);
+            
+          }
+        }
         
     },
     register:function(){
@@ -70,8 +85,7 @@ const Login = {
     },
 
     login:function(){
-      this.$router.push({name:"Todo"});
-      return;
+      
       console.log("login", this.v_password);
       console.log(this.encrypt_password);
       try{
@@ -81,6 +95,8 @@ const Login = {
           alert("Invalid password");
         }else{
           console.log("login ok");
+          localStorage.setItem(this.store_key, btoa(this.v_password));
+
           console.log(this.$router);
           this.$router.push("/todo");
         }
@@ -121,58 +137,8 @@ const Login = {
     }
 
   },
-  computed: {
-    list: function list() {
-      return this.$store.state.list;
-    }
-  },
    created: function(){
       this.checkPassword()
   }
 };
-
-const TodoList = {
-  template: "#todo"
-};
-const Notification = {
-  template: "#notification"
-}
-
-
-const Main = {
-  template: "#main",
-  mounted() {
-    this.$router.push({name:"Login"});
-  }
-}
-
-var routes = [{
-  path: "/todo",
-  name: "Todo",
-  component: TodoList
-},  {
-  path: "/login",
-  name: "Login",
-  component: Login
-},
-  {
-    path: "/notification",
-    name: "Notification",
-    component: Notification
-  }];
-
-
-
-var router = new VueRouter({
-  routes: routes
-});
-
-new Vue({
-  el: "#app",
-  store: store,
-  router: router,
-  render: function render(h) {
-    return h(Main);
-  }
-});
 
