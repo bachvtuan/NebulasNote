@@ -2,6 +2,7 @@
 
 var SampleContract = function () {
    LocalContractStorage.defineMapProperty(this, "dataMap");
+   
    LocalContractStorage.defineProperty(this, "working_list");
 };
 
@@ -25,12 +26,26 @@ var ListTodo = function () {
             return o.toString();
         }
     });
+
+    LocalContractStorage.defineMapProperty(this, "listPassword");
 };
 
 
 ListTodo.prototype = {
     init: function () {
         
+    },
+    //this is encrypt string
+    setPassword: function(password){
+        var from = Blockchain.transaction.from;
+        var exist_password = this.listPassword.get(from);
+        if (exist_password){
+            //user already set password, this is one time password
+            return false;
+        }else{
+            this.listPassword.set(from, password);
+            return true;
+        }
     },
     
     set: function (value) {
