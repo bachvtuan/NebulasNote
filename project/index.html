@@ -6,6 +6,7 @@
   <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
   <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Nunito'>
 	<link rel='stylesheet prefetch' href='style.css'>
+  <link rel="icon" type="image/png" href="images/fav.png" />
 </head>
 <body>
 <div id="main">
@@ -28,20 +29,22 @@
     <div v-if="extension_installed">
       <loading-item v-if="show_loading"></loading-item>
       <h3>Welcome Nebulas Notes</h3>
-      <p><small>This app intent to manage your notes and every notes are encrypt so only you can read it unless you leak app's password</small></p>
+      <p class="my-info" >
+        <small>This app intent to manage your notes on Nebulas network and every notes are encrypted so that only you can read it unless you leak app's password. Keep your password safe !</small></p>
       <p v-if="checking"><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait &nbsp; [You need import wallet into extension first] </p>
       <div v-if="!checking">
         <div v-if="!encrypt_password">
             <p>For first usage, You need register by enter password to protect your list</p>
             <p><small>This is one time password, you can not change it later</small></p>
-            <input v-model="password" type="password" @keyup.enter="register" placeholder="Input strong password">
+            <input v-model="password" type="password" @keyup.enter="register" placeholder="Input password">
+            <p class="my-warning"><small>Note: Password not your private key</small></p>
             <button v-on:click="register" class="success button">Register</button>
         </div>
         <div v-if="encrypt_password">
             <p>Your acccount is found on NAS blockchain,Enter your password to access:</p>
 
             <input v-model="v_password" type="password" @keyup.enter="login" placeholder="Input password">
-            <p><small>Note: This is not your private key</small></p>
+            <p class="my-warning"><small>Note: Password not your private key</small></p>
             <button v-on:click="login"  class="success button" >Login</button>
         </div>
       </div>

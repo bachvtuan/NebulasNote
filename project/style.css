@@ -13,6 +13,10 @@ body{
   background-size: cover;
 }
 
+@keyframes blinker {  
+  50% { opacity: 0.5; }
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -22,7 +26,7 @@ body{
   opacity: 0;
 }
 .container.app{
-  padding: 50px 0px 0px 0px;
+  padding: 60px 0px 0px 0px;
 }
 .notes {
   width: 100%;
@@ -88,14 +92,28 @@ body{
 }
 .loading-item .content{
   text-align: center;
-}
-.loading-item .content p{
-    margin: 4em auto;
-    font-size: 20px;
-    font-weight: bold;
-    color: #FF5722;
+  padding: 0px 20px 0px 20px;
 }
 
+
+
+.loading-item .content p{
+    margin: 4em auto;
+    font-size: 22px;
+    font-weight: bold;
+    color: #FF5722;
+    animation: blinker 5s linear infinite;
+}
+
+.my-warning{
+  color: #E91E63;
+}
+.my-info{
+  background: aliceblue;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: justify;
+}
 .update-note{
     position: absolute;
     width: 100%;
