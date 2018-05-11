@@ -67,8 +67,10 @@ Vue.component('note-list', {
       
       if (resp.result) {
         var result = JSON.parse(resp.result);
+        
         for (var i = result.length - 1; i >= 0; i--) {
           try{
+
             var plain = sjcl.decrypt(Vue.prototype.$appPassord, result[i].data);
             this.notes.push(JSON.parse(plain));
           }catch(error){

@@ -88,7 +88,7 @@ const Login = {
         }else{
           
           localStorage.setItem(Vue.prototype.$store_key, btoa(this.v_password));
-
+          Vue.prototype.$appPassord = this.v_password;
           console.log(this.$router);
           this.$router.push("/todo");
         }

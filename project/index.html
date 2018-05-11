@@ -39,7 +39,9 @@
         </div>
         <div v-if="encrypt_password">
             <p>Your acccount is found on NAS blockchain,Enter your password to access:</p>
+
             <input v-model="v_password" type="password" @keyup.enter="login" placeholder="Input password">
+            <p><small>Note: This is not your private key</small></p>
             <button v-on:click="login"  class="success button" >Login</button>
         </div>
       </div>
