@@ -6,7 +6,6 @@
   <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
   <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Nunito'>
 	<link rel='stylesheet prefetch' href='style.css'>
-	<script type="text/javascript" src="js/sjcl.js" ></script>
 </head>
 <body>
 <div id="main">
@@ -28,10 +27,13 @@
     </div>
     <div v-if="extension_installed">
       <loading-item v-if="show_loading"></loading-item>
+      <h3>Welcome Nebulas Notes</h3>
+      <p><small>This app intent to manage your notes and every notes are encrypt so only you can read it unless you leak app's password</small></p>
       <p v-if="checking"><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait &nbsp; [You need import wallet into extension first] </p>
       <div v-if="!checking">
         <div v-if="!encrypt_password">
             <p>For first usage, You need register by enter password to protect your list</p>
+            <p><small>This is one time password, you can not change it later</small></p>
             <input v-model="password" type="password" @keyup.enter="register" placeholder="Input strong password">
             <button v-on:click="register" class="success button">Register</button>
         </div>
@@ -49,6 +51,16 @@
 <template id="note-list">
     <section class="notes">
       <loading-item v-if="show_loading"></loading-item>
+      <transition name="fade">
+        <update-note 
+              v-if="update_note"
+              v-on:update="updateNote"
+              @close="closeUpdate()"
+              :pnote="update_note"
+              :key="update_note.id"
+        ></update-note>
+      </transition>
+
       <div class="title">
         <h1>
           Nebulas Note  
@@ -78,7 +90,7 @@
 
      
       <div data-alert class="alert-box" v-if="notes.length==0">
-        You don't have any note
+        <small>You don't have any note, try to add one</small>
       </div>
       
       <transition-group name="fade" tag="ul" class="notes__list no-bullet">
@@ -106,6 +118,28 @@
       </button>
     </li>
 </template>
+
+
+<template id="update-note">
+    <div class="update-note" v-on:click="close($event)">
+      <div class="content">
+          <a @click="$emit('close')" class="pull-right" ><i class="fa fa-times" aria-hidden="true"></i> Close</a>
+          <h3>Update note</h3>
+          <p><small>Created date: {{ created_date }}</small></p>
+          <p>
+            <label>Title</label>
+            <input type="text" v-model="note.title" placeholder="Enter title">
+          </p>
+          <p>
+            <label>Description</label>
+            <textarea v-model="note.description" placeholder="Enter description" rows="5" ></textarea>
+          </p>
+          <button class="button" @click="update()" >Update</button>
+          
+      </div>
+    </div>
+</template>
+
 <template id="loading-item">
    <div class="loading-item">
       <div class="content">
@@ -114,17 +148,12 @@
    </div>
 </template>
 
-  <!-- 
-<div id="app">
-</div>  
-
- -->
 
 <script type="text/javascript" src="http://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js" ></script>
-<!-- <script type="text/javascript" src="https://unpkg.com/vuex@3.0.1/dist/vuex.js" ></script> -->
 <script type="text/javascript" src="https://unpkg.com/vue-router@3.0.1/dist/vue-router.js" ></script>
 <script src='//unpkg.com/vuetify/dist/vuetify.min.js'></script>
-<script type="text/javascript" src="js/nebPay.js" ></script>
+<script type="text/javascript" src="js/lib/nebPay.js" ></script>
+<script type="text/javascript" src="js/lib/sjcl.js" ></script>
 <script type="text/javascript">
   var NebPay = require("nebpay");
   var nebPay = new NebPay();

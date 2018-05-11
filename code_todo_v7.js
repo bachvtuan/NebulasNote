@@ -123,9 +123,7 @@ ListTodo.prototype = {
                 break;
             }
         }
-
         return found;
-
 
     },
     del: function (key) {

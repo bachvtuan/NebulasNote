@@ -24,9 +24,10 @@ Vue.component('note-list', {
       newNote: '',
       workingAction:'',
       pendingIndex:null,
-      newItem: {},
+      pendingNote: {},
       serialNumber: '',
       show_loading: false,
+      update_note:null,
       notes: JSON.parse(JSON.stringify(this.pnotes))
     };
   },
@@ -67,17 +68,22 @@ Vue.component('note-list', {
       if (resp.result) {
         var result = JSON.parse(resp.result);
         for (var i = result.length - 1; i >= 0; i--) {
-          this.notes.push(JSON.parse(result[i].data));
+          try{
+            var plain = sjcl.decrypt(Vue.prototype.$appPassord, result[i].data);
+            this.notes.push(JSON.parse(plain));
+          }catch(error){
+            console.log(error);
+          }
+
         }
       }
-
     },
     addNote() {
       if (this.newNote) {
         var date = new Date();
         var time = date.getTime();
 
-        this.newItem = {
+        this.pendingNote = {
           title: this.newNote,
           description: '',
           id: time
@@ -86,7 +92,7 @@ Vue.component('note-list', {
         this.newNote = '';
         this.workingAction = 'addNote';
         var my_listener = this.listener;
-        var params = [time.toString(), JSON.stringify(this.newItem)];
+        var params = [time.toString(), sjcl.encrypt(Vue.prototype.$appPassord, JSON.stringify(this.pendingNote)) ];
         this.serialNumber = nebPay.call(Vue.prototype.$dappAddress, 0, "set", JSON.stringify(params), {
           listener: my_listener //set listener for extension transaction result
         });
@@ -99,6 +105,7 @@ Vue.component('note-list', {
     },
     editNote(note) {
       console.log("move to edit");
+      this.update_note = JSON.parse( JSON.stringify(note) );
       //task.completed = ! task.completed;
     },
     removeNote(index) {
@@ -112,6 +119,37 @@ Vue.component('note-list', {
         listener: my_listener 
       });
       this.onrefreshClick();
+    },
+    updateNote: function(note){
+    	console.log("note",note);
+    	this.update_note = null;
+
+    	for(var i = 0; i < this.notes.length; i++){
+        if (this.notes[i].id == note.id){
+          this.pendingIndex = i;
+          break;
+        }
+      }
+      if (this.pendingIndex === null) return;
+
+    	
+    	
+    	this.workingAction = "updateNote";
+      this.show_loading = true;
+      var my_listener = this.listener;
+
+      this.pendingNote = note;
+      var params = [note.id.toString(), sjcl.encrypt(Vue.prototype.$appPassord, JSON.stringify(this.pendingNote))];
+      console.log("this.pendingIndex",this.pendingIndex);
+      
+      this.serialNumber = nebPay.call(Vue.prototype.$dappAddress, 0, "update", JSON.stringify(params), {
+        listener: my_listener 
+      });
+
+      this.onrefreshClick();
+    },
+    closeUpdate:function(){
+    	this.update_note = null;
     },
     listener: function(resp) {
       console.log("resp listener", resp);
@@ -144,9 +182,16 @@ Vue.component('note-list', {
 
             		case 'addNote':
 		              
-		              _this.notes.splice(0, 0, _this.newItem);
-		              //_this.notes.push(_this.newItem);
-		              _this.newItem = {};
+		              _this.notes.splice(0, 0, _this.pendingNote);
+		              //_this.notes.push(_this.pendingNote);
+		              _this.pendingNote = {};
+		              break;
+
+            		case 'updateNote':
+            			console.log("update note", _this.pendingNote, _this.pendingIndex);
+		              _this.notes[_this.pendingIndex] =  _this.pendingNote;
+		              _this.pendingIndex = null;
+		              _this.pendingNote = {};
 		              break;
             	}
               
@@ -178,4 +223,32 @@ Vue.component('note-item', {
       return classes.join(' ');
     }
   }
+});
+
+
+Vue.component('update-note', {
+  template: '#update-note',
+  props: ['pnote'],
+  data() {
+  	var note = JSON.parse(JSON.stringify(this.pnote));
+  	var date = new Date( parseInt(note.id)  );
+    return {
+      note: note,
+      created_date :date.toDateString()
+    };
+  },
+  methods:{
+  	update:function(){
+  		console.log(this.note);
+  		this.$emit('update', this.note)
+  	},
+    close:function(event){
+      if (event.target.className == "update-note"){
+        this.$emit('close');
+      }
+
+
+    }
+  }
+  
 });
