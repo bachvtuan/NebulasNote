@@ -1,19 +1,4 @@
 
-var store = new Vuex.Store({
-  state: {
-    list: [{
-      id: 1,
-      title: "Ceremony at Monkey Forest",
-      location: "Alas Kedaton, Tabanan",
-      date: "18 Mar 2018",
-      hour: "14:00 PM",
-      joined: 32,
-      imageURL: "https://c2.staticflickr.com/8/7390/11206634984_44f61f926d.jpg",
-      desc: "The temple ceremony in Alas Kedaton Temple is carried out every 210 days a year. It is on <i>Anggarakasih Medangsia</i> (Balinese Hindu calendar) or on every Tuesday where on that time the society do the worship or pray to request the safety and prosperity. The unique in this ceremony is do not use the fire and do not hence Penjor and also finished before the sunset or before the night is come."
-    }]
-  }
-});
-
 
 var contract_address = "n1yJTnQwxLYg1GvQ3k1taxVNq84sofYXoD7";
 //can use any text, pick this one
