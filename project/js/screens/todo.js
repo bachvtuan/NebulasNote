@@ -7,13 +7,11 @@ const TodoList = {
       {
         title: 'Make todo list',
         description:'',
-        completed: true,
         id:1
       },
       {
         title: 'Go skydiving',
         description:'',
-        completed: false,
         id:2
       }
     ]
@@ -37,9 +35,8 @@ Vue.component('note-list', {
     };
   },
   computed: {
-    incomplete() {
-      return this.notes.filter(this.inProgress).length;
-      
+    totalNotes() {
+      return this.notes.length;
     }
   },
   methods: {
@@ -55,40 +52,23 @@ Vue.component('note-list', {
         this.newNote = '';
       }
     },
-    completeTask(task) {
-      task.completed = ! task.completed;
+    editNote(note) {
+    	console.log("move to edit");
+      //task.completed = ! task.completed;
     },
-    removeTask(index) {
+    removeNote(index) {
       this.notes.splice(index, 1);
-    },
-    clearCompleted() {
-    	console.log("SDFsdf");
-      var temp = this.notes.filter(this.inProgress);
-
-      this.notes = temp;
-    },
-    clearAll() {
-      this.notes = [];
-    },
-    
-    inProgress(task) {
-      return ! this.isCompleted(task);
-    },
-    isCompleted(task) {
-      return task.completed;
     }
   }
 });
 
-Vue.component('task-item', {
-  template: '#task-item',
-  props: ['task'],
+Vue.component('note-item', {
+  template: '#note-item',
+  props: ['note'],
   computed: {
     className() {
-      let classes = ['tasks__item__toggle'];
-      if (this.task.completed) {
-        classes.push('tasks__item__toggle--completed');
-      }
+      let classes = ['notes__item__toggle'];
+      
       return classes.join(' ');
     }
   }

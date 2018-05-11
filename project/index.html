@@ -42,15 +42,15 @@
 </template>
 
 <template id="note-list">
-    <section class="tasks">
+    <section class="notes">
       <h1>
         Nebulas Note  
         <transition name="fade">
-          <small v-if="incomplete">({{ incomplete }})</small>
+          <small v-if="totalNotes">({{ totalNotes }})</small>
         </transition>
         
       </h1>
-      <div class="tasks__new input-group">
+      <div class="notes__new input-group">
         <input type="text"
                class="input-group-field"
                v-model="newNote"
@@ -66,41 +66,30 @@
         </span>
       </div>
 
-      <div class="tasks__clear button-group pull-right" v-if="notes.length > 0">
-        <button class="button warning small"
-                @click="clearCompleted"
-        >
-          <i class="fa fa-check"></i> Clear Completed
-        </button>
-        <button class="button alert small"
-                @click="clearAll"
-        >
-          <i class="fa fa-trash"></i> Clear All
-        </button>
-      </div>
+     
       <div data-alert class="alert-box" v-if="notes.length==0">
         You don't have any note
       </div>
       
-      <transition-group name="fade" tag="ul" class="tasks__list no-bullet">
-          <task-item v-for="(task, index) in notes"
-                     @remove="removeTask(index)"
-                     @complete="completeTask(task)"
-                     :task="task"
-                     :key="task.id"
-          ></task-item>
+      <transition-group name="fade" tag="ul" class="notes__list no-bullet">
+          <note-item v-for="(note, index) in notes"
+                     @remove="removeNote(index)"
+                     @edit="editNote(note)"
+                     :note="note"
+                     :key="note.id"
+          ></note-item>
       </transition-group>
     </section>
 </template>
 
-<template id="task-item">
-    <li class="tasks__item">
+<template id="note-item">
+    <li class="notes__item">
       <button :class="className"
-          @click.self="$emit('complete')"
+          @click.self="$emit('edit')"
       >
-        {{ task.title }}
+        {{ note.title }}
       </button>
-      <button class="tasks__item__remove button alert pull-right"
+      <button class="notes__item__remove button alert pull-right"
               @click="$emit('remove')"
       >
         <i class="fa fa-times"></i>

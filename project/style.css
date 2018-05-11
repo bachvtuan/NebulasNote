@@ -14,7 +14,7 @@ button {
 .fade-leave-active {
   opacity: 0;
 }
-.tasks {
+.notes {
   width: 100%;
   max-width: 45rem;
   padding: 1em;
@@ -23,14 +23,14 @@ button {
   background-color: #fff;
   box-shadow: 0px 0.25rem 1rem rgba(0,0,0,0.25);
 }
-.tasks__list {
+.notes__list {
   clear: both;
 }
-.tasks__item {
+.notes__item {
   margin-bottom: 0.5em;
   position: relative;
 }
-.tasks__item__toggle {
+.notes__item__toggle {
   cursor: pointer;
   width: 100%;
   text-align: left;
@@ -38,20 +38,20 @@ button {
   background-color: rgba(0,0,0,0.05);
   border: 1px solid rgba(0,0,0,0.1);
 }
-.tasks__item__toggle:hover {
+.notes__item__toggle:hover {
   background-color: rgba(0,0,0,0.1);
   border-color: rgba(0,0,0,0.15);
 }
-.tasks__item__toggle--completed {
+.notes__item__toggle--completed {
   text-decoration: line-through;
   background-color: rgba(0,128,0,0.15);
   border-color: rgba(0,128,0,0.2);
 }
-.tasks__item__toggle--completed:hover {
+.notes__item__toggle--completed:hover {
   background-color: rgba(0,128,0,0.25);
   border-color: rgba(0,128,0,0.3);
 }
-.tasks__item__remove {
+.notes__item__remove {
   position: absolute;
   height: 100%;
   top: 50%;
@@ -59,6 +59,6 @@ button {
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
 }
-.tasks__item__remove i {
+.notes__item__remove i {
   vertical-align: middle;
 }
