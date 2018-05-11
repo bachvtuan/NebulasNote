@@ -7,8 +7,10 @@ button {
   font-family: 'Nunito', sans-serif;
 }
 
-body, html{
-  height: initial;
+
+body{
+  background: url(images/dawn-3291444_1920.jpg) no-repeat;
+  background-size: cover;
 }
 
 .fade-enter-active,
@@ -19,11 +21,14 @@ body, html{
 .fade-leave-active {
   opacity: 0;
 }
+.container.app{
+  padding: 50px 0px 0px 0px;
+}
 .notes {
   width: 100%;
   max-width: 45rem;
   padding: 1em;
-  margin: 3em auto 1em auto;
+  margin: 0px auto;
   overflow: auto;
   background-color: #fff;
   box-shadow: 0px 0.25rem 1rem rgba(0,0,0,0.25);
@@ -68,7 +73,7 @@ body, html{
   vertical-align: middle;
 }
 
-.title h1{
+.title h3{
   display: inline-block;
 }
 
