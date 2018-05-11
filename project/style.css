@@ -73,6 +73,7 @@ body, html{
 }
 
 .loading-item{
+  z-index: 5;
   background: #ffffffe8;
   position: absolute;
   top: 0px;

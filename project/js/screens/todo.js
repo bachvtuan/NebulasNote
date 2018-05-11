@@ -1,23 +1,11 @@
-
 const TodoList = {
   template: "#todo",
-  data: function(){
-  	//console.log("Vue.prototype.$appPassord",Vue.prototype.$appPassord);
-  	return {
-    notes: [
-      {
-        title: 'Make todo list',
-        description:'',
-        id:1
-      },
-      {
-        title: 'Go skydiving',
-        description:'',
-        id:2
-      }
-    ]
+  data: function() {
+    //console.log("Vue.prototype.$appPassord",Vue.prototype.$appPassord);
+    return {
+      notes: []
+    }
   }
-  } 
 };
 const Notification = {
   template: "#notification"
@@ -27,12 +15,19 @@ const Notification = {
 Vue.component('note-list', {
   template: '#note-list',
   props: {
-    pnotes: {default: []}
+    pnotes: {
+      default: []
+    }
   },
   data() {
     return {
       newNote: '',
-      notes: JSON.parse( JSON.stringify(this.pnotes) )
+      workingAction:'',
+      pendingIndex:null,
+      newItem: {},
+      serialNumber: '',
+      show_loading: false,
+      notes: JSON.parse(JSON.stringify(this.pnotes))
     };
   },
   computed: {
@@ -40,29 +35,135 @@ Vue.component('note-list', {
       return this.notes.length;
     }
   },
+  created: function() {
+
+    this.getList()
+
+
+  },
   methods: {
-  	logOut(){
-  		localStorage.removeItem(Vue.prototype.$store_key);
-  		this.$router.push("/login");
-  	},
+    logOut() {
+      localStorage.removeItem(Vue.prototype.$store_key);
+      this.$router.push("/login");
+    },
+    getList: function() {
+      var to = Vue.prototype.$dappAddress;
+      var value = 0;
+      var callFunction = "list";
+      var callArgs = "";
+      this.show_loading = true;
+      var my_listener = this.listenerList;
+      nebPay.simulateCall(to, value, callFunction, callArgs, {
+        listener: my_listener
+      });
+    },
+    listenerList: function(resp) {
+      this.show_loading = false;
+      // error, user need import wallet first
+      if (typeof(resp) == "string") {
+        return;
+      }
+      
+      if (resp.result) {
+        var result = JSON.parse(resp.result);
+        for (var i = result.length - 1; i >= 0; i--) {
+          this.notes.push(JSON.parse(result[i].data));
+        }
+      }
+
+    },
     addNote() {
       if (this.newNote) {
-      	var date = new Date();
-      	var time = date.getTime();
-        this.notes.push({
+        var date = new Date();
+        var time = date.getTime();
+
+        this.newItem = {
           title: this.newNote,
-          completed: false,
+          description: '',
           id: time
-        });
+        };
+
         this.newNote = '';
+        this.workingAction = 'addNote';
+        var my_listener = this.listener;
+        var params = [time.toString(), JSON.stringify(this.newItem)];
+        this.serialNumber = nebPay.call(Vue.prototype.$dappAddress, 0, "set", JSON.stringify(params), {
+          listener: my_listener //set listener for extension transaction result
+        });
+
+        this.show_loading = true;
+
+        this.onrefreshClick();
+
       }
     },
     editNote(note) {
-    	console.log("move to edit");
+      console.log("move to edit");
       //task.completed = ! task.completed;
     },
     removeNote(index) {
-      this.notes.splice(index, 1);
+      var select_note = this.notes[index];
+      this.show_loading = true;
+      var my_listener = this.listener;
+      var params = [select_note.id.toString()];
+      this.workingAction = "removeNote";
+      this.pendingIndex =  index;
+      this.serialNumber = nebPay.call(Vue.prototype.$dappAddress, 0, "del", JSON.stringify(params), {
+        listener: my_listener 
+      });
+      this.onrefreshClick();
+    },
+    listener: function(resp) {
+      console.log("resp listener", resp);
+    },
+
+    onrefreshClick: function() {
+      var _this = this;
+      setTimeout(function() {
+        if (!_this.serialNumber) return;
+        nebPay.queryPayInfo(_this.serialNumber) //search transaction result from server (result upload to server by app)
+          .then(function(resp) {
+          	console.log("my resp",resp);
+            if (!resp) {
+            	console.log("stop herer");
+            	return;
+            }
+            resp = JSON.parse(resp);
+
+            if (resp.code == 0 && resp.data.status == 1) {
+            	console.log("finished");
+            	_this.show_loading = false;
+            	switch(_this.workingAction){
+            		case 'removeNote':
+            			if (_this.pendingIndex !== null){
+	            			_this.notes.splice(_this.pendingIndex, 1);
+	            			_this.pendingIndex = null;            				
+            			}
+
+            			break;
+
+            		case 'addNote':
+		              
+		              _this.notes.splice(0, 0, _this.newItem);
+		              //_this.notes.push(_this.newItem);
+		              _this.newItem = {};
+		              break;
+            	}
+              
+
+
+            } else {
+              console.log("call again");
+              _this.onrefreshClick();
+            }
+
+          })
+          .catch(function(err) {
+            console.log("my error", error);
+
+          });
+      }, 10000);
+
     }
   }
 });
@@ -73,7 +174,7 @@ Vue.component('note-item', {
   computed: {
     className() {
       let classes = ['notes__item__toggle'];
-      
+
       return classes.join(' ');
     }
   }
