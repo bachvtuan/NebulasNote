@@ -21,20 +21,25 @@
 </template>
 
 <template id="login">
-     
-  <div class="login">
-
-    <h1 v-if="checking">Please wait</h1>
-    <div v-if="!checking">
-      <div v-if="!encrypt_password">
-          <p>For first time, You need register by enter strong password to protect your list</p>
-          <input v-model="password" placeholder="Input strong password">
-          <button v-on:click="register">Register</button>
-      </div>
-      <div v-if="encrypt_password">
-          <p>Your acccount is found on system,Enter your password:</p>
-          <input v-model="v_password" placeholder="Input password">
-          <button v-on:click="login" class="btn" >Login</button>
+    
+  <div class="login notes">
+    <div v-if="!extension_installed">
+      <p>You need install chrome extension before continue. Install link <a  target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a>
+    </div>
+    <div v-if="extension_installed">
+      <loading-item v-if="show_loading"></loading-item>
+      <p v-if="checking"><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait &nbsp; [You need import wallet into extension first] </p>
+      <div v-if="!checking">
+        <div v-if="!encrypt_password">
+            <p>For first usage, You need register by enter password to protect your list</p>
+            <input v-model="password" type="password" @keyup.enter="register" placeholder="Input strong password">
+            <button v-on:click="register" class="success button">Register</button>
+        </div>
+        <div v-if="encrypt_password">
+            <p>Your acccount is found on NAS blockchain,Enter your password to access:</p>
+            <input v-model="v_password" type="password" @keyup.enter="login" placeholder="Input password">
+            <button v-on:click="login"  class="success button" >Login</button>
+        </div>
       </div>
     </div>
 
@@ -43,13 +48,17 @@
 
 <template id="note-list">
     <section class="notes">
-      <h1>
-        Nebulas Note  
-        <transition name="fade">
-          <small v-if="totalNotes">({{ totalNotes }})</small>
-        </transition>
-        
-      </h1>
+      <div class="title">
+        <h1>
+          Nebulas Note  
+          <transition name="fade">
+            <small v-if="totalNotes">({{ totalNotes }})</small>
+          </transition>
+          
+        </h1>
+        <a  class="pull-right" @click="logOut" >Logout <i class="fa fa-sign-out"></i></a>
+      </div>
+
       <div class="notes__new input-group">
         <input type="text"
                class="input-group-field"
@@ -96,7 +105,14 @@
       </button>
     </li>
 </template>
-
+<template id="loading-item">
+   <div class="loading-item">
+      <div class="content">
+        <p>Please wait</p>
+      </div>
+    
+   </div>
+</template>
 
   <!-- 
 <div id="app">

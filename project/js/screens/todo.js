@@ -2,6 +2,7 @@
 const TodoList = {
   template: "#todo",
   data: function(){
+  	//console.log("Vue.prototype.$appPassord",Vue.prototype.$appPassord);
   	return {
     notes: [
       {
@@ -40,6 +41,10 @@ Vue.component('note-list', {
     }
   },
   methods: {
+  	logOut(){
+  		localStorage.removeItem(Vue.prototype.$store_key);
+  		this.$router.push("/login");
+  	},
     addNote() {
       if (this.newNote) {
       	var date = new Date();

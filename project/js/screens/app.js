@@ -1,4 +1,8 @@
 
+Vue.prototype.$dappAddress = "n1yJTnQwxLYg1GvQ3k1taxVNq84sofYXoD7";
+//can use any text, pick this one
+Vue.prototype.$store_key = 'password';
+
 
 const Main = {
   template: "#main",
@@ -6,6 +10,12 @@ const Main = {
     this.$router.push({name:"Login"});
   }
 }
+
+
+
+Vue.component('loading-item', {
+  template: '#loading-item'  
+});
 
 var routes = [{
   path: "/todo",
