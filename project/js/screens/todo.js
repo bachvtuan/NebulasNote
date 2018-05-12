@@ -206,7 +206,7 @@ Vue.component('note-list', {
 
           })
           .catch(function(err) {
-            console.log("my error", error);
+            console.log("my error", err);
 
           });
       }, 10000);
