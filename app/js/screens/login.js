@@ -50,7 +50,7 @@ const Login = {
             
             if (de_result == this.sample_param ){
               Vue.prototype.$appPassord = plain_password;
-              this.$router.push("/todo");
+              this.$router.push("/note");
             }
           }catch(error){
             console.log(error);
@@ -92,7 +92,7 @@ const Login = {
           localStorage.setItem(Vue.prototype.$store_key, btoa(this.v_password));
           Vue.prototype.$appPassord = this.v_password;
           console.log(this.$router);
-          this.$router.push("/todo");
+          this.$router.push("/note");
         }
       }catch(error){
         console.log(error);

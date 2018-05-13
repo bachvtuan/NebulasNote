@@ -29,9 +29,9 @@ Vue.component('notification', {
 
 
 var routes = [{
-  path: "/todo",
-  name: "Todo",
-  component: TodoList
+  path: "/note",
+  name: "Note",
+  component: NoteList
 },  {
   path: "/login",
   name: "Login",
