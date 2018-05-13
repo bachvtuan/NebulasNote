@@ -1,27 +1,28 @@
-
 const Main = {
   template: "#main",
   mounted() {
-    this.$router.push({name:"Login"});
+    this.$router.push({
+      name: "Login"
+    });
   }
 }
 
 
 
 Vue.component('loading-item', {
-  template: '#loading-item'  ,
+  template: '#loading-item',
   props: ['message']
 });
 
 Vue.component('notification', {
-  template: '#notification'  ,
+  template: '#notification',
   props: ['message'],
   created: function() {
     // disapperar after 3 seconds
     var _this = this;
-    setTimeout(function(){
+    setTimeout(function() {
       _this.$emit('hide');
-    },3000)
+    }, 3000)
 
 
   },
@@ -32,7 +33,7 @@ var routes = [{
   path: "/note",
   name: "Note",
   component: NoteList
-},  {
+}, {
   path: "/login",
   name: "Login",
   component: Login

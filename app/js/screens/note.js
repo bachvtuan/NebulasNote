@@ -22,13 +22,13 @@ Vue.component('note-list', {
   data() {
     return {
       newNote: '',
-      workingAction:'',
-      pendingIndex:null,
+      workingAction: '',
+      pendingIndex: null,
       pendingNote: {},
-      pendingTx:'',
-      loading_message:'',
-      notification_message:"",
-      update_note:null,
+      pendingTx: '',
+      loading_message: '',
+      notification_message: "",
+      update_note: null,
       notes: JSON.parse(JSON.stringify(this.pnotes))
     };
   },
@@ -48,7 +48,7 @@ Vue.component('note-list', {
       localStorage.removeItem(Vue.prototype.$store_key);
       this.$router.push("/login");
     },
-    hideNotification(){
+    hideNotification() {
       this.notification_message = "";
     },
     getList() {
@@ -68,16 +68,16 @@ Vue.component('note-list', {
       if (typeof(resp) == "string") {
         return;
       }
-      
+
       if (resp.result) {
         var result = JSON.parse(resp.result);
-        
+
         for (var i = result.length - 1; i >= 0; i--) {
-          try{
+          try {
 
             var plain = sjcl.decrypt(Vue.prototype.$appPassord, result[i].data);
             this.notes.push(JSON.parse(plain));
-          }catch(error){
+          } catch (error) {
             console.log(error);
           }
 
@@ -98,7 +98,7 @@ Vue.component('note-list', {
         this.newNote = '';
         this.workingAction = 'addNote';
         var my_listener = this.listener;
-        var params = [time.toString(), sjcl.encrypt(Vue.prototype.$appPassord, JSON.stringify(this.pendingNote)) ];
+        var params = [time.toString(), sjcl.encrypt(Vue.prototype.$appPassord, JSON.stringify(this.pendingNote))];
         nebPay.call(Vue.prototype.$dappAddress, 0, "set", JSON.stringify(params), {
           listener: my_listener //set listener for extension transaction result
         });
@@ -109,8 +109,8 @@ Vue.component('note-list', {
       }
     },
     editNote(note) {
-      console.log("move to edit");
-      this.update_note = JSON.parse( JSON.stringify(note) );
+
+      this.update_note = JSON.parse(JSON.stringify(note));
       //task.completed = ! task.completed;
     },
     removeNote(index) {
@@ -119,46 +119,46 @@ Vue.component('note-list', {
       var my_listener = this.listener;
       var params = [select_note.id.toString()];
       this.workingAction = "removeNote";
-      this.pendingIndex =  index;
+      this.pendingIndex = index;
       nebPay.call(Vue.prototype.$dappAddress, 0, "del", JSON.stringify(params), {
-        listener: my_listener 
+        listener: my_listener
       });
-      
-    },
-    updateNote(note){
-    	console.log("note",note);
-    	this.update_note = null;
 
-    	for(var i = 0; i < this.notes.length; i++){
-        if (this.notes[i].id == note.id){
+    },
+    updateNote(note) {
+
+      this.update_note = null;
+
+      for (var i = 0; i < this.notes.length; i++) {
+        if (this.notes[i].id == note.id) {
           this.pendingIndex = i;
           break;
         }
       }
       if (this.pendingIndex === null) return;
 
-    	
-    	
-    	this.workingAction = "updateNote";
+
+
+      this.workingAction = "updateNote";
       this.loading_message = "Wait for confirm";
       var my_listener = this.listener;
 
       this.pendingNote = note;
       var params = [note.id.toString(), sjcl.encrypt(Vue.prototype.$appPassord, JSON.stringify(this.pendingNote))];
-      console.log("this.pendingIndex",this.pendingIndex);
-      
+
+
       nebPay.call(Vue.prototype.$dappAddress, 0, "update", JSON.stringify(params), {
-        listener: my_listener 
+        listener: my_listener
       });
 
-      
+
     },
-    closeUpdate(){
-    	this.update_note = null;
+    closeUpdate() {
+      this.update_note = null;
     },
     listener(resp) {
-      
-      if (Vue.prototype.$user_reject == resp){
+
+      if (Vue.prototype.$user_reject == resp) {
         this.loading_message = "";
         return;
       }
@@ -171,48 +171,49 @@ Vue.component('note-list', {
       var _this = this;
       setTimeout(function() {
         if (!_this.pendingTx) return;
-        
-        neb.api.getTransactionReceipt(_this.pendingTx).then(function(resp){
-            if ( resp && resp.status == 1) {
-              _this.pendingTx = "";
-              
-              _this.loading_message = "";
-              switch(_this.workingAction){
-                case 'removeNote':
-                  if (_this.pendingIndex !== null){
-                    _this.notes.splice(_this.pendingIndex, 1);
-                    _this.pendingIndex = null;                    
-                  }
 
-                  _this.notification_message = "Your note have been removed successfully";
+        neb.api.getTransactionReceipt(_this.pendingTx).then(function(resp) {
+          if (resp && resp.status == 1) {
+            _this.pendingTx = "";
 
-                  break;
-
-                case 'addNote':
-                  
-                  _this.notes.splice(0, 0, _this.pendingNote);
-                  //_this.notes.push(_this.pendingNote);
-                  _this.pendingNote = {};
-                  _this.notification_message = "Your note have been added successfully";
-                  break;
-
-                case 'updateNote':
-                  console.log("update note", _this.pendingNote, _this.pendingIndex);
-                  _this.notes[_this.pendingIndex] =  _this.pendingNote;
+            _this.loading_message = "";
+            switch (_this.workingAction) {
+              case 'removeNote':
+                if (_this.pendingIndex !== null) {
+                  _this.notes.splice(_this.pendingIndex, 1);
                   _this.pendingIndex = null;
-                  _this.pendingNote = {};
-                  _this.notification_message = "Your note have been updated successfully";
-                  break;
-              }
-              
+                }
 
+                _this.notification_message = "Your note have been removed successfully";
 
-            } else {
-              console.log("call again");
-              _this.onrefreshClick();
+                break;
+
+              case 'addNote':
+
+                _this.notes.splice(0, 0, _this.pendingNote);
+                //_this.notes.push(_this.pendingNote);
+                _this.pendingNote = {};
+                _this.notification_message = "Your note have been added successfully";
+                break;
+
+              case 'updateNote':
+                _this.notes[_this.pendingIndex] = _this.pendingNote;
+                _this.pendingIndex = null;
+                _this.pendingNote = {};
+                _this.notification_message = "Your note have been updated successfully";
+                break;
             }
-        }).catch(function(err){ console.log("my error", err); })
-        
+
+
+
+          } else {
+            console.log("call again");
+            _this.onrefreshClick();
+          }
+        }).catch(function(err) {
+          console.log("my error", err);
+        })
+
       }, 10000);
 
     }
@@ -236,25 +237,24 @@ Vue.component('update-note', {
   template: '#update-note',
   props: ['pnote'],
   data() {
-  	var note = JSON.parse(JSON.stringify(this.pnote));
-  	var date = new Date( parseInt(note.id)  );
+    var note = JSON.parse(JSON.stringify(this.pnote));
+    var date = new Date(parseInt(note.id));
     return {
       note: note,
-      created_date :date.toDateString()
+      created_date: date.toDateString()
     };
   },
-  methods:{
-  	update:function(){
-  		console.log(this.note);
-  		this.$emit('update', this.note)
-  	},
-    close:function(event){
-      if (event.target.className == "update-note"){
+  methods: {
+    update: function() {
+      this.$emit('update', this.note)
+    },
+    close: function(event) {
+      if (event.target.className == "update-note") {
         this.$emit('close');
       }
 
 
     }
   }
-  
+
 });
