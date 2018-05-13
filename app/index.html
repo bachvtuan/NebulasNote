@@ -161,7 +161,7 @@
 </template>
 
 
-<script type="text/javascript" src="http://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js" ></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js" ></script>
 <script type="text/javascript" src="https://unpkg.com/vue-router@3.0.1/dist/vue-router.js" ></script>
 
 <script type="text/javascript" src="js/lib/nebulas.js" ></script>
@@ -171,7 +171,7 @@
   var NebPay = require("nebpay");
   var nebPay = new NebPay();
 
-  // since I have issue to get transaction receipt by nebpay. I decided to use Neb js to get transaction receipt instead
+  // since I have issue to get transaction receipt by nebpay. I decided to use Neb.js to get transaction receipt instead
   var HttpRequest = require("nebulas").HttpRequest;
   var Neb = require("nebulas").Neb;
   var neb = new Neb();
@@ -180,7 +180,7 @@
 
   // dApp smart contract address
   Vue.prototype.$dappAddress = "n1fnX4gRRcP7G5EgxexhAKTTuyUrgGVRKai";
-  //can use any text, pick this one
+  //Key for store on localstorage
   Vue.prototype.$store_key = 'password';
   Vue.prototype.$user_reject = 'Error: Transaction rejected by user';
 
