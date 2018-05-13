@@ -1,5 +1,5 @@
-const TodoList = {
-  template: "#todo",
+const NoteList = {
+  template: "#note",
   data: function() {
     //console.log("Vue.prototype.$appPassord",Vue.prototype.$appPassord);
     return {
