@@ -148,15 +148,14 @@ const Login = {
    created: function(){
       var  _this = this;
       setTimeout(function(){
-        console.log("window.webExtensionWallet abc");
-        console.log(window.webExtensionWallet);
-        console.log(typeof(window.webExtensionWallet));
+        console.log("window.webExtensionWallet value",window.webExtensionWallet);
+        
         
         _this.extension_installed = typeof(window.webExtensionWallet) == "string";
         if (_this.extension_installed){
           _this.checkPassword();
         }
-      },1000);
+      },800);
 
       
   }
