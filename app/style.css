@@ -131,3 +131,13 @@ body{
     padding: 20px;
     background: #fff;
 }
+.notification-message{
+  position: absolute;
+  display: block;
+  background: #0e0e0e;
+  color: #ffffff;
+  padding: 10px;
+  right: 10px;
+  top: 10px;
+  border-radius: 5px;
+}

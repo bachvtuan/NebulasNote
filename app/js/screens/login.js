@@ -5,8 +5,7 @@ const Login = {
     return {
       extension_installed:false,
       sample_param: "Hello World!",
-      loading_message:"Please wait",
-      
+      loading_message:"",
       checking:true,
       password:'',
       v_password:'',

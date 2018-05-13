@@ -27,6 +27,7 @@ Vue.component('note-list', {
       pendingNote: {},
       pendingTx:'',
       loading_message:'',
+      notification_message:"",
       update_note:null,
       notes: JSON.parse(JSON.stringify(this.pnotes))
     };
@@ -37,7 +38,7 @@ Vue.component('note-list', {
     }
   },
   created: function() {
-
+    this.notification_message = "Login successfully";
     this.getList()
 
 
@@ -47,7 +48,10 @@ Vue.component('note-list', {
       localStorage.removeItem(Vue.prototype.$store_key);
       this.$router.push("/login");
     },
-    getList: function() {
+    hideNotification(){
+      this.notification_message = "";
+    },
+    getList() {
       var to = Vue.prototype.$dappAddress;
       var value = 0;
       var callFunction = "list";
@@ -58,7 +62,7 @@ Vue.component('note-list', {
         listener: my_listener
       });
     },
-    listenerList: function(resp) {
+    listenerList(resp) {
       this.loading_message = "";
       // error, user need import wallet first
       if (typeof(resp) == "string") {
@@ -121,7 +125,7 @@ Vue.component('note-list', {
       });
       
     },
-    updateNote: function(note){
+    updateNote(note){
     	console.log("note",note);
     	this.update_note = null;
 
@@ -149,10 +153,10 @@ Vue.component('note-list', {
 
       
     },
-    closeUpdate:function(){
+    closeUpdate(){
     	this.update_note = null;
     },
-    listener: function(resp) {
+    listener(resp) {
       
       if (Vue.prototype.$user_reject == resp){
         this.loading_message = "";
@@ -163,7 +167,7 @@ Vue.component('note-list', {
       this.onrefreshClick();
     },
 
-    onrefreshClick: function() {
+    onrefreshClick() {
       var _this = this;
       setTimeout(function() {
         if (!_this.pendingTx) return;
@@ -180,6 +184,8 @@ Vue.component('note-list', {
                     _this.pendingIndex = null;                    
                   }
 
+                  _this.notification_message = "Your note have been removed successfully";
+
                   break;
 
                 case 'addNote':
@@ -187,6 +193,7 @@ Vue.component('note-list', {
                   _this.notes.splice(0, 0, _this.pendingNote);
                   //_this.notes.push(_this.pendingNote);
                   _this.pendingNote = {};
+                  _this.notification_message = "Your note have been added successfully";
                   break;
 
                 case 'updateNote':
@@ -194,6 +201,7 @@ Vue.component('note-list', {
                   _this.notes[_this.pendingIndex] =  _this.pendingNote;
                   _this.pendingIndex = null;
                   _this.pendingNote = {};
+                  _this.notification_message = "Your note have been updated successfully";
                   break;
               }
               

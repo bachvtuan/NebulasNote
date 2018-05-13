@@ -34,7 +34,7 @@
       <div v-if="!checking">
         <div v-if="!encrypt_password">
             <p>For first usage, You need register by enter password to protect your data</p>
-            <p><small>This is one time password, you can not change it later</small></p>
+            <p><small>This is one time password, you can not change it later so you should backup it</small></p>
             <input v-model="password" type="password" @keyup.enter="register" placeholder="Input password">
             <p class="my-warning"><small>Note: Password not your private key</small></p>
             <button v-on:click="register" class="success button">Register</button>
@@ -55,6 +55,8 @@
 <template id="note-list">
     <section class="notes">
       <loading-item v-if="loading_message" :message="loading_message" ></loading-item>
+      <notification v-if="notification_message" :message="notification_message" @hide="hideNotification()" ></notification>
+      
       <transition name="fade">
         <update-note 
               v-if="update_note"
@@ -152,6 +154,12 @@
    </div>
 </template>
 
+<template id="notification">
+  <transition name="fade">
+    <p class="notification-message" >{{message}}</p>
+  </transition>
+</template>
+
 
 <script type="text/javascript" src="http://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js" ></script>
 <script type="text/javascript" src="https://unpkg.com/vue-router@3.0.1/dist/vue-router.js" ></script>
@@ -163,14 +171,23 @@
   var NebPay = require("nebpay");
   var nebPay = new NebPay();
 
-  // since I have issue get transaction receipt by nebpay. I decided to use Neb js to get transaction receipt
+  // since I have issue to get transaction receipt by nebpay. I decided to use Neb js to get transaction receipt instead
   var HttpRequest = require("nebulas").HttpRequest;
   var Neb = require("nebulas").Neb;
   var Account = require("nebulas").Account;
   var Transaction = require("nebulas").Transaction;
   var Unit = require("nebulas").Unit;
   var neb = new Neb();
+  //make sure you swith you mainnet
   neb.setRequest(new HttpRequest("https://testnet.nebulas.io"));
+
+  // dApp smart contract address
+  Vue.prototype.$dappAddress = "n1teVCbDzVWyzgGLFaCKUaZVVRUyPScm6WU";
+  //can use any text, pick this one
+  Vue.prototype.$store_key = 'password';
+  Vue.prototype.$user_reject = 'Error: Transaction rejected by user';
+
+
 
 </script>
 <script type="text/javascript" src="js/screens/login.js" ></script>

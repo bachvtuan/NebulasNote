@@ -1,9 +1,3 @@
-// dApp smart contract address
-Vue.prototype.$dappAddress = "n1xep1BsGhhk7FJaEuHaXsssoHyTJfTWz66";
-//can use any text, pick this one
-Vue.prototype.$store_key = 'password';
-Vue.prototype.$user_reject = 'Error: Transaction rejected by user';
-
 
 const Main = {
   template: "#main",
@@ -18,6 +12,21 @@ Vue.component('loading-item', {
   template: '#loading-item'  ,
   props: ['message']
 });
+
+Vue.component('notification', {
+  template: '#notification'  ,
+  props: ['message'],
+  created: function() {
+    // disapperar after 3 seconds
+    var _this = this;
+    setTimeout(function(){
+      _this.$emit('hide');
+    },3000)
+
+
+  },
+});
+
 
 var routes = [{
   path: "/todo",
