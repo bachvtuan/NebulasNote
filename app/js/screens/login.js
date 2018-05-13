@@ -146,10 +146,14 @@ const Login = {
 
   },
    created: function(){
-      this.extension_installed = typeof(window.webExtensionWallet) == "string";
-      if (this.extension_installed){
-        this.checkPassword()
-      }
+      var  _this = this;
+      setTimeout(function(){
+        _this.extension_installed = typeof(window.webExtensionWallet) == "string";
+        if (_this.extension_installed){
+          _this.checkPassword();
+        }
+      },400);
+
       
   }
 };
