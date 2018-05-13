@@ -29,12 +29,12 @@
       <loading-item v-if="loading_message" :message="loading_message" ></loading-item>
       <h3>Welcome Nebulas Notes</h3>
       <p class="my-info" >
-        <small>This app intent to manage your notes on Nebulas network and every notes are encrypted so that only you can read it unless you leak app's password. Keep your password safe !</small></p>
-      <p v-if="checking"><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait &nbsp; [You need import wallet into extension first] </p>
+        <small>This app intent to manage your notes on Nebulas network. Every note is encrypted so that only you can read it unless you leak app's password. Keep your password safe !</small></p>
+      <p v-if="checking"><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait </p>
       <div v-if="!checking">
         <div v-if="!encrypt_password">
             <p>For first usage, You need register by enter password to protect your data</p>
-            <p><small>This is one time password, you can not change it later so you should backup it</small></p>
+            <p><small>This is one time password, you can not change it later so you should backup it or remember it</small></p>
             <input v-model="password" type="password" @keyup.enter="register" placeholder="Input password">
             <p class="my-warning"><small>Note: Password not your private key</small></p>
             <button v-on:click="register" class="success button">Register</button>
@@ -43,7 +43,7 @@
             <p>Your acccount is found on NAS blockchain,Enter your password to access:</p>
 
             <input v-model="v_password" type="password" @keyup.enter="login" placeholder="Input password">
-            <p class="my-warning"><small>Note: Password not your private key</small></p>
+            <p class="my-warning"><small>Note: Password is not your private key</small></p>
             <button v-on:click="login"  class="success button" >Login</button>
         </div>
       </div>
@@ -149,7 +149,7 @@
 <template id="loading-item">
    <div class="loading-item">
       <div class="content">
-        <p>{{message}}</p>
+        <p><i class="fa fa-spinner fa-spin fa-fw"></i> {{message}}</p>
       </div>
    </div>
 </template>
@@ -174,15 +174,12 @@
   // since I have issue to get transaction receipt by nebpay. I decided to use Neb js to get transaction receipt instead
   var HttpRequest = require("nebulas").HttpRequest;
   var Neb = require("nebulas").Neb;
-  var Account = require("nebulas").Account;
-  var Transaction = require("nebulas").Transaction;
-  var Unit = require("nebulas").Unit;
   var neb = new Neb();
   //make sure you swith you mainnet
-  neb.setRequest(new HttpRequest("https://testnet.nebulas.io"));
+  neb.setRequest(new HttpRequest("https://mainnet.nebulas.io"));
 
   // dApp smart contract address
-  Vue.prototype.$dappAddress = "n1teVCbDzVWyzgGLFaCKUaZVVRUyPScm6WU";
+  Vue.prototype.$dappAddress = "n1fnX4gRRcP7G5EgxexhAKTTuyUrgGVRKai";
   //can use any text, pick this one
   Vue.prototype.$store_key = 'password';
   Vue.prototype.$user_reject = 'Error: Transaction rejected by user';

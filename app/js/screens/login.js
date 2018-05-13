@@ -127,6 +127,7 @@ const Login = {
                 switch(_this.workingAction){
                   case 'setPassword':
                   //set password  and go to list
+                  Vue.prototype.$appPassord = _this.password;
                   localStorage.setItem(Vue.prototype.$store_key, btoa(_this.password));
                   _this.$router.push("/todo");
                     break;
