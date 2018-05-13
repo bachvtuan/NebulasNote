@@ -1,21 +1,12 @@
-https://github.com/nebulasio/wiki/blob/master/tutorials/%5BEnglish%5D%20Nebulas%20101%20-%2003%20Smart%20Contracts%20JavaScript.md
-https://github.com/nebulasio/wiki/blob/master/tutorials/%5BEnglish%5D%20Nebulas%20101%20-%2004%20Smart%20Contract%20Storage.md
+## Nebulas Notes
 
-https://testnet.nebulas.io/v1/user/accountstate
+This app intent to anyone can manage notes on Nebulas network and it is secured by encrypt password. 
 
-{"address":"n1YcwGVPiGg1BqMiREPPq3XZT7QuXAUFiNq"}
+Because all data is submit to Nebulas is plain text so all data must encrypted by given password and only the owner can decrypt it.
 
-https://medium.com/nebulasio/implementation-details-of-nebulas-incentive-program-season-1-cdfcb385f5c9
-https://medium.com/nebulasio/how-to-build-a-dapp-on-nebulas-part-1-da4eaf9399bc
+## Smart Contract:
+- HASH: 3428838a49e894838f3649868110360726388699b60d85dd5cda77ec25baecf8
+- Address: n1n8bdB5BQcTASVnX9pbj1XABh3ix8GaQSp
 
-https://github.com/ChengOrangeJu/WebExtensionWallet
-https://github.com/15010159959/super-dictionary
+_Enjoy your privacy !_
 
-smart contract:
-n1nwiL4VMnPexL1wcWUA9jx77sGftyhXAgH
-
-https://codepen.io/oddvalue/pen/dpBGpj
-https://codepen.io/janumedia/pen/eyyVwP?page=1&
-
-wallet password 
-123456789

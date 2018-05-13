@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Nebulas Note</title>
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.4/foundation.min.css'>
+  <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+  <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Nunito'>
+	<link rel='stylesheet prefetch' href='style.css'>
+  <link rel="icon" type="image/png" href="images/fav.png" />
+</head>
+<body>
+<div id="main">
+  
+      <div class="container app">
+        <router-view></router-view>  
+      </div>
+</div>  
+<template id="todo">
+  <note-list :pnotes="notes"></note-list>
+</template>
+
+<template id="login">
+    
+  <div class="login notes">
+    <div v-if="!extension_installed">
+      <p>You need install chrome extension before continue. Install link <a  target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a>
+    </div>
+    <div v-if="extension_installed">
+      <loading-item v-if="loading_message" :message="loading_message" ></loading-item>
+      <h3>Welcome Nebulas Notes</h3>
+      <p class="my-info" >
+        <small>This app intent to manage your notes on Nebulas network and every notes are encrypted so that only you can read it unless you leak app's password. Keep your password safe !</small></p>
+      <p v-if="checking"><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait &nbsp; [You need import wallet into extension first] </p>
+      <div v-if="!checking">
+        <div v-if="!encrypt_password">
+            <p>For first usage, You need register by enter password to protect your data</p>
+            <p><small>This is one time password, you can not change it later</small></p>
+            <input v-model="password" type="password" @keyup.enter="register" placeholder="Input password">
+            <p class="my-warning"><small>Note: Password not your private key</small></p>
+            <button v-on:click="register" class="success button">Register</button>
+        </div>
+        <div v-if="encrypt_password">
+            <p>Your acccount is found on NAS blockchain,Enter your password to access:</p>
+
+            <input v-model="v_password" type="password" @keyup.enter="login" placeholder="Input password">
+            <p class="my-warning"><small>Note: Password not your private key</small></p>
+            <button v-on:click="login"  class="success button" >Login</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<template id="note-list">
+    <section class="notes">
+      <loading-item v-if="loading_message" :message="loading_message" ></loading-item>
+      <transition name="fade">
+        <update-note 
+              v-if="update_note"
+              v-on:update="updateNote"
+              @close="closeUpdate()"
+              :pnote="update_note"
+              :key="update_note.id"
+        ></update-note>
+      </transition>
+
+      <div class="title">
+        <h3>
+          Nebulas Note  
+          <transition name="fade">
+            <small v-if="totalNotes">({{ totalNotes }})</small>
+          </transition>
+          
+        </h3>
+        <a  class="pull-right" @click="logOut" >Logout <i class="fa fa-sign-out"></i></a>
+      </div>
+
+      <div class="notes__new input-group">
+        <input type="text"
+               class="input-group-field"
+               v-model="newNote"
+               @keyup.enter="addNote"
+               placeholder="New note"
+        >
+        <span class="input-group-button">
+          <button @click="addNote" 
+                  class="button"
+          >
+            <i class="fa fa-plus"></i> Add
+          </button>
+        </span>
+      </div>
+
+     
+      <div data-alert class="alert-box" v-if="notes.length==0">
+        <small>You don't have any note, try to add one</small>
+      </div>
+      
+      <transition-group name="fade" tag="ul" class="notes__list no-bullet">
+          <note-item v-for="(note, index) in notes"
+                     @remove="removeNote(index)"
+                     @edit="editNote(note)"
+                     :note="note"
+                     :key="note.id"
+          ></note-item>
+      </transition-group>
+    </section>
+</template>
+
+<template id="note-item">
+    <li class="notes__item">
+      <button :class="className"
+          @click.self="$emit('edit')"
+      >
+        {{ note.title }}
+      </button>
+      <button class="notes__item__remove button alert pull-right"
+              @click="$emit('remove')"
+      >
+        <i class="fa fa-times"></i>
+      </button>
+    </li>
+</template>
+
+
+<template id="update-note">
+    <div class="update-note" v-on:click="close($event)">
+      <div class="content">
+          <a @click="$emit('close')" class="pull-right" ><i class="fa fa-times" aria-hidden="true"></i> Close</a>
+          <h3>Update note</h3>
+          <p><small>Created date: {{ created_date }}</small></p>
+          <p>
+            <label>Title</label>
+            <input type="text" v-model="note.title" placeholder="Enter title">
+          </p>
+          <p>
+            <label>Description</label>
+            <textarea v-model="note.description" placeholder="Enter description" rows="5" ></textarea>
+          </p>
+          <button class="button" @click="update()" >Update</button>
+          
+      </div>
+    </div>
+</template>
+
+<template id="loading-item">
+   <div class="loading-item">
+      <div class="content">
+        <p>{{message}}</p>
+      </div>
+   </div>
+</template>
+
+
+<script type="text/javascript" src="http://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js" ></script>
+<script type="text/javascript" src="https://unpkg.com/vue-router@3.0.1/dist/vue-router.js" ></script>
+
+<script type="text/javascript" src="js/lib/nebulas.js" ></script>
+<script type="text/javascript" src="js/lib/nebPay.js" ></script>
+<script type="text/javascript" src="js/lib/sjcl.js" ></script>
+<script type="text/javascript">
+  var NebPay = require("nebpay");
+  var nebPay = new NebPay();
+
+  // since I have issue get transaction receipt by nebpay. I decided to use Neb js to get transaction receipt
+  var HttpRequest = require("nebulas").HttpRequest;
+  var Neb = require("nebulas").Neb;
+  var Account = require("nebulas").Account;
+  var Transaction = require("nebulas").Transaction;
+  var Unit = require("nebulas").Unit;
+  var neb = new Neb();
+  neb.setRequest(new HttpRequest("https://testnet.nebulas.io"));
+
+</script>
+<script type="text/javascript" src="js/screens/login.js" ></script>
+<script type="text/javascript" src="js/screens/todo.js" ></script>
+<script type="text/javascript" src="js/screens/app.js" ></script>
+
+</body>
+</html>
